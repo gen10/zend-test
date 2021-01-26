@@ -24,24 +24,28 @@
  * @see Zend_Db_Table_Rowset_Abstract
  */
 // require_once "Zend/Db/Table/Rowset/Abstract.php";
+use PHPUnit\DbUnit\DataSet\AbstractTable;
+use PHPUnit\DbUnit\DataSet\DefaultTableMetadata;
 
 /**
  * Use a Zend_Db Rowset as a datatable for assertions with other PHPUnit Database extension tables.
  *
- * @uses       PHPUnit_Extensions_Database_DataSet_AbstractTable
+ * @uses       AbstractTable
  * @category   Zend
  * @package    Zend_Test
  * @subpackage PHPUnit
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Test_PHPUnit_Db_DataSet_DbRowset extends PHPUnit_Extensions_Database_DataSet_AbstractTable
+class Zend_Test_PHPUnit_Db_DataSet_DbRowset extends AbstractTable
 {
     /**
      * Construct Table object from a Zend_Db_Table_Rowset
      *
      * @param Zend_Db_Table_Rowset_Abstract $rowset
-     * @param string $tableName
+     * @param null $tableName
+     * @throws Zend_Db_Table_Exception
+     * @throws Zend_Test_PHPUnit_Db_Exception
      */
     public function __construct(Zend_Db_Table_Rowset_Abstract $rowset, $tableName = null)
     {
@@ -68,6 +72,6 @@ class Zend_Test_PHPUnit_Db_DataSet_DbRowset extends PHPUnit_Extensions_Database_
         }
 
         $this->tableName = $tableName;
-        $this->tableMetaData = new PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData($this->tableName, $columns);
+        $this->tableMetaData = new DefaultTableMetadata($this->tableName, $columns);
     }
 }

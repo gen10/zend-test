@@ -29,19 +29,20 @@
  * @see Zend_Test_PHPUnit_Db_Metadata_Generic
  */
 // require_once "Zend/Test/PHPUnit/Db/Metadata/Generic.php";
+use PHPUnit\DbUnit\Database\DefaultConnection;
 
 /**
  * Generic Abstraction of Zend_Db Connections in the PHPUnit Database Extension context.
  *
  * @uses       Zend_Db_Adapter_Abstract
- * @uses       PHPUnit_Extensions_Database_DB_DefaultDatabaseConnection
+ * @uses       DefaultConnection
  * @category   Zend
  * @package    Zend_Test
  * @subpackage PHPUnit
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Test_PHPUnit_Db_Connection extends PHPUnit_Extensions_Database_DB_DefaultDatabaseConnection
+class Zend_Test_PHPUnit_Db_Connection extends DefaultConnection
 {
     /**
      * Zend_Db_Adapter_Abstract
@@ -60,7 +61,7 @@ class Zend_Test_PHPUnit_Db_Connection extends PHPUnit_Extensions_Database_DB_Def
     /**
      * Metadata
      *
-     * @param PHPUnit_Extensions_Database_DB_IMetaData $db
+     * @var Zend_Test_PHPUnit_Db_Metadata_Generic
      */
     protected $_metaData;
 
@@ -81,7 +82,7 @@ class Zend_Test_PHPUnit_Db_Connection extends PHPUnit_Extensions_Database_DB_Def
      *
      * @return void
      */
-    public function close()
+    public function close(): void
     {
         $this->_connection->closeConnection();
     }
@@ -91,7 +92,8 @@ class Zend_Test_PHPUnit_Db_Connection extends PHPUnit_Extensions_Database_DB_Def
      *
      * @param string $resultName
      * @param string $sql
-     * @return PHPUnit_Extensions_Database_DataSet_ITable
+     * @return Zend_Test_PHPUnit_Db_DataSet_QueryTable
+     * @throws Zend_Test_PHPUnit_Db_Exception
      */
     public function createQueryTable($resultName, $sql)
     {
@@ -112,7 +114,7 @@ class Zend_Test_PHPUnit_Db_Connection extends PHPUnit_Extensions_Database_DB_Def
      * Returns a database metadata object that can be used to retrieve table
      * meta data from the database.
      *
-     * @return PHPUnit_Extensions_Database_DB_IMetaData
+     * @return Zend_Test_PHPUnit_Db_Metadata_Generic
      */
     public function getMetaData()
     {

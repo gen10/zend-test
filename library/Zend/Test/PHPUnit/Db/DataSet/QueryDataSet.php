@@ -29,25 +29,28 @@
  * @see Zend_Db_Select
  */
 // require_once "Zend/Db/Select.php";
+use PHPUnit\DbUnit\Database\Connection;
+use PHPUnit\DbUnit\DataSet\QueryDataSet;
 
 /**
  * Uses several query strings or Zend_Db_Select objects to form a dataset of tables for assertion with other datasets.
  *
- * @uses       PHPUnit_Extensions_Database_DataSet_QueryDataSet
+ * @uses       QueryDataSet
  * @category   Zend
  * @package    Zend_Test
  * @subpackage PHPUnit
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Test_PHPUnit_Db_DataSet_QueryDataSet extends PHPUnit_Extensions_Database_DataSet_QueryDataSet
+class Zend_Test_PHPUnit_Db_DataSet_QueryDataSet extends QueryDataSet
 {
     /**
      * Creates a new dataset using the given database connection.
      *
-     * @param PHPUnit_Extensions_Database_DB_IDatabaseConnection $databaseConnection
+     * @param Connection $databaseConnection
+     * @throws Zend_Test_PHPUnit_Db_Exception
      */
-    public function __construct(PHPUnit_Extensions_Database_DB_IDatabaseConnection $databaseConnection)
+    public function __construct(Connection $databaseConnection)
     {
         if( !($databaseConnection instanceof Zend_Test_PHPUnit_Db_Connection) ) {
             // require_once "Zend/Test/PHPUnit/Db/Exception.php";
@@ -57,14 +60,15 @@ class Zend_Test_PHPUnit_Db_DataSet_QueryDataSet extends PHPUnit_Extensions_Datab
     }
 
     /**
-     * Add a Table dataset representation by specifiying an arbitrary select query.
+     * Add a Table dataset representation by specifying an arbitrary select query.
      *
      * By default a select * will be done on the given tablename.
      *
-     * @param string                $tableName
+     * @param string $tableName
      * @param string|Zend_Db_Select $query
+     * @throws Zend_Test_PHPUnit_Db_Exception
      */
-    public function addTable($tableName, $query = NULL)
+    public function addTable($tableName, $query = NULL): void
     {
         if ($query === NULL) {
             $query = $this->databaseConnection->getConnection()->select();

@@ -43,25 +43,30 @@
 /**
  * @see Zend_Test_PHPUnit_Db_DataSet_DbRowset
  */
+
 // require_once "Zend/Test/PHPUnit/Db/DataSet/DbRowset.php";
+use PHPUnit\DbUnit\Operation\Composite;
+use PHPUnit\DbUnit\Operation\None;
+use PHPUnit\DbUnit\Operation\Operation;
+use PHPUnit\DbUnit\TestCase;
 
 /**
  * Generic Testcase for Zend Framework related DbUnit Testing with PHPUnit
  *
- * @uses       PHPUnit_Extensions_Database_TestCase
+ * @uses       TestCase
  * @category   Zend
  * @package    Zend_Test
  * @subpackage PHPUnit
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-abstract class Zend_Test_PHPUnit_DatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
+abstract class Zend_Test_PHPUnit_DatabaseTestCase extends TestCase
 {
     /**
      * Creates a new Zend Database Connection using the given Adapter and database schema name.
      *
-     * @param  Zend_Db_Adapter_Abstract $connection
-     * @param  string $schema
+     * @param Zend_Db_Adapter_Abstract $connection
+     * @param string $schema
      * @return Zend_Test_PHPUnit_Db_Connection
      */
     protected function createZendDbConnection(Zend_Db_Adapter_Abstract $connection, $schema)
@@ -82,11 +87,11 @@ abstract class Zend_Test_PHPUnit_DatabaseTestCase extends PHPUnit_Extensions_Dat
     /**
      * Returns the database operation executed in test setup.
      *
-     * @return PHPUnit_Extensions_Database_Operation_DatabaseOperation
+     * @return Composite
      */
     protected function getSetUpOperation()
     {
-        return new PHPUnit_Extensions_Database_Operation_Composite(array(
+        return new Composite(array(
             new Zend_Test_PHPUnit_Db_Operation_Truncate(),
             new Zend_Test_PHPUnit_Db_Operation_Insert(),
         ));
@@ -95,23 +100,24 @@ abstract class Zend_Test_PHPUnit_DatabaseTestCase extends PHPUnit_Extensions_Dat
     /**
      * Returns the database operation executed in test cleanup.
      *
-     * @return PHPUnit_Extensions_Database_Operation_DatabaseOperation
+     *
+     * @return None|Operation
      */
     protected function getTearDownOperation()
     {
-        return PHPUnit_Extensions_Database_Operation_Factory::NONE();
+        return PHPUnit\DbUnit\Operation\Factory::NONE();
     }
 
     /**
      * Create a dataset based on multiple Zend_Db_Table instances
      *
-     * @param  array $tables
+     * @param array $tables
      * @return Zend_Test_PHPUnit_Db_DataSet_DbTableDataSet
      */
-    protected function createDbTableDataSet(array $tables=array())
+    protected function createDbTableDataSet(array $tables = array())
     {
         $dataSet = new Zend_Test_PHPUnit_Db_DataSet_DbTableDataSet();
-        foreach($tables AS $table) {
+        foreach ($tables as $table) {
             $dataSet->addTable($table);
         }
         return $dataSet;
@@ -127,7 +133,7 @@ abstract class Zend_Test_PHPUnit_DatabaseTestCase extends PHPUnit_Extensions_Dat
      * @param string $offset
      * @return Zend_Test_PHPUnit_Db_DataSet_DbTable
      */
-    protected function createDbTable(Zend_Db_Table_Abstract $table, $where=null, $order=null, $count=null, $offset=null)
+    protected function createDbTable(Zend_Db_Table_Abstract $table, $where = null, $order = null, $count = null, $offset = null)
     {
         return new Zend_Test_PHPUnit_Db_DataSet_DbTable($table, $where, $order, $count, $offset);
     }
@@ -135,9 +141,10 @@ abstract class Zend_Test_PHPUnit_DatabaseTestCase extends PHPUnit_Extensions_Dat
     /**
      * Create a data table based on a Zend_Db_Table_Rowset instance
      *
-     * @param  Zend_Db_Table_Rowset_Abstract $rowset
-     * @param  string
+     * @param Zend_Db_Table_Rowset_Abstract $rowset
+     * @param string
      * @return Zend_Test_PHPUnit_Db_DataSet_DbRowset
+     * @throws Zend_Test_PHPUnit_Db_Exception
      */
     protected function createDbRowset(Zend_Db_Table_Rowset_Abstract $rowset, $tableName = null)
     {

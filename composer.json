@@ -5,13 +5,23 @@
     "homepage": "http://framework.zend.com/",
     "license": "BSD-3-Clause",
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=7.1",
+
+        "ext-dom": "*",
+
+        "zf1s/zend-application": "^1.13.4",
         "zf1s/zend-controller": "^1.13.4",
+        "zf1s/zend-db": "^1.13.4",
         "zf1s/zend-dom": "^1.13.4",
         "zf1s/zend-exception": "^1.13.4",
+        "zf1s/zend-filter": "^1.13.4",
         "zf1s/zend-layout": "^1.13.4",
         "zf1s/zend-registry": "^1.13.4",
         "zf1s/zend-session": "^1.13.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.4",
+        "phpunit/dbunit": "^4.0"
     },
     "autoload": {
         "psr-0": {

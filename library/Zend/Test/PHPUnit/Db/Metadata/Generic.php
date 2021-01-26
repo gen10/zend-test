@@ -24,18 +24,19 @@
  * @see Zend_Db_Adapter_Abstract
  */
 // require_once "Zend/Db/Adapter/Abstract.php";
+use PHPUnit\DbUnit\Database\Metadata\Metadata;
 
 /**
  * Generic Metadata accessor for the Zend_Db adapters
  *
- * @uses       PHPUnit_Extensions_Database_DB_IMetaData
+ * @uses       Metadata
  * @category   Zend
  * @package    Zend_Test
  * @subpackage PHPUnit
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Test_PHPUnit_Db_Metadata_Generic implements PHPUnit_Extensions_Database_DB_IMetaData
+class Zend_Test_PHPUnit_Db_Metadata_Generic implements Metadata
 {
     /**
      * Zend_Db Connection
@@ -45,7 +46,7 @@ class Zend_Test_PHPUnit_Db_Metadata_Generic implements PHPUnit_Extensions_Databa
     protected $_connection;
 
     /**
-     * Schemaname
+     * Schema Name
      *
      * @var string
      */

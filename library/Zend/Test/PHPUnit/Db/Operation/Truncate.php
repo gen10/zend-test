@@ -24,26 +24,30 @@
  * @see Zend_Test_PHPUnit_Db_Connection
  */
 // require_once "Zend/Test/PHPUnit/Db/Connection.php";
+use PHPUnit\DbUnit\Database\Connection;
+use PHPUnit\DbUnit\DataSet\IDataSet;
+use PHPUnit\DbUnit\Operation\Operation;
 
 /**
  * Operation for Truncating on setup or teardown of a database tester.
  *
- * @uses       PHPUnit_Extensions_Database_Operation_IDatabaseOperation
+ * @uses       Operation
  * @category   Zend
  * @package    Zend_Test
  * @subpackage PHPUnit
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Test_PHPUnit_Db_Operation_Truncate implements PHPUnit_Extensions_Database_Operation_IDatabaseOperation
+class Zend_Test_PHPUnit_Db_Operation_Truncate implements Operation
 {
     /**
      *
-     * @param PHPUnit_Extensions_Database_DB_IDatabaseConnection $connection
-     * @param PHPUnit_Extensions_Database_DataSet_IDataSet $dataSet
+     * @param Connection $connection
+     * @param IDataSet $dataSet
      * @return void
+     * @throws Zend_Test_PHPUnit_Db_Exception
      */
-    public function execute(PHPUnit_Extensions_Database_DB_IDatabaseConnection $connection, PHPUnit_Extensions_Database_DataSet_IDataSet $dataSet)
+    public function execute(Connection $connection, IDataSet $dataSet)
     {
         if(!($connection instanceof Zend_Test_PHPUnit_Db_Connection)) {
             // require_once "Zend/Test/PHPUnit/Db/Exception.php";
@@ -55,7 +59,7 @@ class Zend_Test_PHPUnit_Db_Operation_Truncate implements PHPUnit_Extensions_Data
                 $tableName = $table->getTableMetaData()->getTableName();
                 $this->_truncate($connection->getConnection(), $tableName);
             } catch (Exception $e) {
-                throw new PHPUnit_Extensions_Database_Operation_Exception('TRUNCATE', 'TRUNCATE '.$tableName.'', array(), $table, $e->getMessage());
+                throw new \PHPUnit\DbUnit\Operation\Exception('TRUNCATE', 'TRUNCATE ' . $tableName, array(), $table, $e->getMessage());
             }
         }
     }
@@ -66,6 +70,7 @@ class Zend_Test_PHPUnit_Db_Operation_Truncate implements PHPUnit_Extensions_Data
      * @param Zend_Db_Adapter_Abstract $db
      * @param string $tableName
      * @return void
+     * @throws Zend_Db_Adapter_Exception
      */
     protected function _truncate(Zend_Db_Adapter_Abstract $db, $tableName)
     {

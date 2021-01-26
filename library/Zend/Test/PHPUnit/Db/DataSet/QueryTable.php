@@ -20,27 +20,31 @@
  * @version    $Id$
  */
 
+use PHPUnit\DbUnit\Database\Connection;
+use PHPUnit\DbUnit\DataSet\DefaultTableMetadata;
+use PHPUnit\DbUnit\DataSet\QueryTable;
+
 /**
  * Represent a PHPUnit Database Extension table with Queries using a Zend_Db adapter for assertion against other tables.
  *
- * @uses       PHPUnit_Extensions_Database_DataSet_QueryTable
+ * @uses       QueryTable
  * @category   Zend
  * @package    Zend_Test
  * @subpackage PHPUnit
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Test_PHPUnit_Db_DataSet_QueryTable extends PHPUnit_Extensions_Database_DataSet_QueryTable
+class Zend_Test_PHPUnit_Db_DataSet_QueryTable extends QueryTable
 {
     /**
      * Creates a new database query table object.
      *
      * @param string                                             $tableName
      * @param string                                             $query
-     * @param PHPUnit_Extensions_Database_DB_IDatabaseConnection $databaseConnection
+     * @param Connection $databaseConnection
      * @throws Zend_Test_PHPUnit_Db_Exception
      */
-    public function __construct($tableName, $query, PHPUnit_Extensions_Database_DB_IDatabaseConnection $databaseConnection)
+    public function __construct($tableName, $query, Connection $databaseConnection)
     {
         if( !($databaseConnection instanceof Zend_Test_PHPUnit_Db_Connection) ) {
             // require_once "Zend/Test/PHPUnit/Db/Exception.php";
@@ -54,7 +58,7 @@ class Zend_Test_PHPUnit_Db_DataSet_QueryTable extends PHPUnit_Extensions_Databas
      *
      * @return void
      */
-    protected function loadData()
+    protected function loadData() : void
     {
         if($this->data === null) {
             $stmt = $this->databaseConnection->getConnection()->query($this->query);
@@ -65,7 +69,7 @@ class Zend_Test_PHPUnit_Db_DataSet_QueryTable extends PHPUnit_Extensions_Databas
     /**
      * Create Table Metadata
      */
-    protected function createTableMetaData()
+    protected function createTableMetaData(): void
     {
         if ($this->tableMetaData === NULL)
         {
@@ -74,7 +78,7 @@ class Zend_Test_PHPUnit_Db_DataSet_QueryTable extends PHPUnit_Extensions_Databas
             if(count($this->data) > 0) {
                 $keys = array_keys($this->data[0]);
             }
-            $this->tableMetaData = new PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData(
+            $this->tableMetaData = new DefaultTableMetadata(
                 $this->tableName, $keys
             );
         }

@@ -29,25 +29,31 @@
  * @see Zend_Test_PHPUnit_Db_Operation_Insert
  */
 // require_once "Zend/Test/PHPUnit/Db/Operation/Insert.php";
+use PHPUnit\DbUnit\Database\Connection;
+use PHPUnit\DbUnit\DataSet\IDataSet;
+use PHPUnit\DbUnit\DefaultTester;
+use PHPUnit\DbUnit\Operation\Composite;
+use PHPUnit\DbUnit\Operation\Factory;
 
 /**
  * Simple Tester for Database Tests when the Abstract Test Case cannot be used.
  *
- * @uses       PHPUnit_Extensions_Database_DefaultTester
+ * @uses       DefaultTester
  * @category   Zend
  * @package    Zend_Test
  * @subpackage PHPUnit
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Test_PHPUnit_Db_SimpleTester extends PHPUnit_Extensions_Database_DefaultTester
+class Zend_Test_PHPUnit_Db_SimpleTester extends DefaultTester
 {
     /**
      * Creates a new default database tester using the given connection.
      *
-     * @param PHPUnit_Extensions_Database_DB_IDatabaseConnection $connection
+     * @param Connection $connection
+     * @throws Zend_Test_PHPUnit_Db_Exception
      */
-    public function __construct(PHPUnit_Extensions_Database_DB_IDatabaseConnection $connection)
+    public function __construct(Connection $connection)
     {
         if(!($connection instanceof Zend_Test_PHPUnit_Db_Connection)) {
             // require_once "Zend/Test/PHPUnit/Db/Exception.php";
@@ -55,19 +61,19 @@ class Zend_Test_PHPUnit_Db_SimpleTester extends PHPUnit_Extensions_Database_Defa
         }
 
         $this->connection = $connection;
-        $this->setUpOperation = new PHPUnit_Extensions_Database_Operation_Composite(array(
+        $this->setUpOperation = new Composite(array(
             new Zend_Test_PHPUnit_Db_Operation_Truncate(),
             new Zend_Test_PHPUnit_Db_Operation_Insert(),
         ));
-        $this->tearDownOperation = PHPUnit_Extensions_Database_Operation_Factory::NONE();
+        $this->tearDownOperation = Factory::NONE();
     }
 
     /**
      * Set Up the database using the given Dataset and the SetUp strategy "Truncate, then Insert"
      *
-     * @param PHPUnit_Extensions_Database_DataSet_IDataSet $dataSet
+     * @param IDataSet $dataSet
      */
-    public function setUpDatabase(PHPUnit_Extensions_Database_DataSet_IDataSet $dataSet)
+    public function setUpDatabase(IDataSet $dataSet)
     {
         $this->setDataSet($dataSet);
         $this->onSetUp();
